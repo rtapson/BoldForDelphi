@@ -23,7 +23,8 @@ uses
   Classes,
   BoldSubscription,
   BoldValueSpaceInterfaces, // besExisting is defined here...
-  BoldRegularExpression,
+//  BoldRegularExpression,
+  System.RegularExpressions,
   BoldCoreConsts;
 
 var
@@ -2536,8 +2537,8 @@ begin
 end;
 
 var
-  RegExp: TRegularExpression;
-  SQLRegExp: TRegularExpression;
+  RegExp: TRegEx;
+  SQLRegExp: TRegEx;
 
 function FixSQLRegExp(S: String): String;
 var
@@ -2555,52 +2556,52 @@ end;
 
 Procedure InitSQLRegExp;
 begin
-  if not assigned(SQLRegExp) then
-  begin
-    SQLRegExp := TRegularExpression.Create;
-    with SQLRegExp.MetaCharacters do
-    begin
-      AnyChar := #1;
-      CharSetClose := #2;
-      CharSetComplement := #3;
-      CharSetOpen := #4;
-      CharSetRange := #5;
-      EndOfLine := #6;
-      QuoteChar := #7;
-      Repeat0OrMoreTimes := #8;
-      Repeat1OrMoreTimes := #9;
-      StartOfLine := #11;
-    end;
-  end;
+//  if not assigned(SQLRegExp) then
+//  begin
+//    SQLRegExp := TRegEx.Create;
+//    with SQLRegExp.MetaCharacters do
+//    begin
+//      AnyChar := #1;
+//      CharSetClose := #2;
+//      CharSetComplement := #3;
+//      CharSetOpen := #4;
+//      CharSetRange := #5;
+//      EndOfLine := #6;
+//      QuoteChar := #7;
+//      Repeat0OrMoreTimes := #8;
+//      Repeat1OrMoreTimes := #9;
+//      StartOfLine := #11;
+//    end;
+//  end;
 end;
 
 procedure InitRegExp;
 begin
-  if not assigned(RegExp) then
-    RegExp := TRegularExpression.Create;
+//  if not assigned(RegExp) then
+//    RegExp := TRegEx.Create;
 end;
 
 procedure TBOS_SQLLike.Evaluate(const Params: TBoldOclSymbolParameters);
 begin
   InitSQLRegExp;
-  SQlRegExp.RegularExpression := FixSqlRegExp(XString(Params.values[1]));
-  SqlRegExp.CaseSensitive := true;
-  Help.MakeNewBoolean(Params.Result, SQLRegExp.SearchString(XString(Params.values[0])) <> 0);
+//  SQlRegExp.RegularExpression := FixSqlRegExp(XString(Params.values[1]));
+//  SqlRegExp.CaseSensitive := true;
+  Help.MakeNewBoolean(Params.Result, SQLRegExp.Match(XString(Params.values[0]), FixSqlRegExp(XString(Params.values[1]))).Success);
 end;
 
 procedure TBOS_SQLLikeCaseInSensitive.Evaluate(const Params: TBoldOclSymbolParameters);
 begin
   InitSQLRegExp;
-  SQlRegExp.RegularExpression := FixSqlRegExp(XString(Params.values[1]));
-  SqlRegExp.CaseSensitive := False;
-  Help.MakeNewBoolean(Params.Result, SQLRegExp.SearchString(XString(Params.values[0])) <> 0);
+//  SQlRegExp.RegularExpression := FixSqlRegExp(XString(Params.values[1]));
+//  SqlRegExp.CaseSensitive := False;
+  Help.MakeNewBoolean(Params.Result, SQLRegExp.Match(XString(Params.values[0]), FixSqlRegExp(XString(Params.values[1]))).Success);
 end;
 
 procedure TBOS_RegExpMatch.Evaluate(const Params: TBoldOclSymbolParameters);
 begin
   InitRegExp;
-  RegExp.RegularExpression := XString(Params.values[1]);
-  Help.MakeNewBoolean(Params.Result, RegExp.SearchString(XString(Params.values[0])) <> 0);
+//  RegExp.RegularExpression := XString(Params.values[1]);
+  Help.MakeNewBoolean(Params.Result, RegExp.Match(XString(Params.values[0]), XString(Params.values[1])).Success);
 end;
 
 procedure TBOS_InDateRange.Evaluate(const Params: TBoldOclSymbolParameters);
@@ -2779,8 +2780,6 @@ begin
 end;
 
 initialization
-  SQLRegExp := nil;
-  RegExp := nil;
   RegisterOclOperation(TBOS_Equal);
   RegisterOclOperation(TBOS_NotEqual);
   RegisterOclOperation(TBOS_Except);
@@ -2891,8 +2890,8 @@ initialization
   RegisterOclOperation(TBOS_TimeToTimeStamp);
 
 finalization
-  SqlRegExp.Free;
-  RegExp.Free;
+  //SqlRegExp.Free;
+  //RegExp.Free;
   FreeAndNil(G_OCLOperations);
 
 end.

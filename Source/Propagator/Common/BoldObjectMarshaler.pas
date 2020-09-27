@@ -69,7 +69,7 @@ end;
 
 function TBoldObjectMarshaler.UnMarshalObject(out Obj): boolean;
 var
-  p: int64;
+  p: Uint64;
 begin
   Result := false;
   try
